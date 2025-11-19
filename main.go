@@ -41,8 +41,8 @@ func main() {
 			items.POST("", ginitem.CreateItem(db))
 			items.GET("", ListItems(db))
 			items.GET("/:id", ginitem.GetItem(db))
-			items.PUT("/:id", UpdateItem(db))
-			items.PATCH("/:id", UpdateItem(db))
+			items.PUT("/:id", ginitem.UpdateItem(db))
+			items.PATCH("/:id", ginitem.UpdateItem(db))
 			items.DELETE("/:id", DeleteItem(db))
 		}
 	} // Define a simple GET endpoint
@@ -57,30 +57,6 @@ func main() {
 	// Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)
 	if err := r.Run(":3001"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
-	}
-}
-
-func UpdateItem(db *gorm.DB) func(*gin.Context) {
-	return func(c *gin.Context) {
-		var data model.TodoItemUpdate
-		id, err := strconv.Atoi(c.Param("id"))
-
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		if err := c.ShouldBind(&data); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		if err := db.Where("id = ?", id).Updates(&data).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		c.JSON(http.StatusOK, common.SimpleSuccessResponse(true))
 	}
 }
 
