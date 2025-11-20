@@ -4,10 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"social-todo-list/common"
-	"social-todo-list/modules/item/model"
 	ginitem "social-todo-list/modules/item/transport/gin"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
@@ -43,7 +40,7 @@ func main() {
 			items.GET("/:id", ginitem.GetItem(db))
 			items.PUT("/:id", ginitem.UpdateItem(db))
 			items.PATCH("/:id", ginitem.UpdateItem(db))
-			items.DELETE("/:id", DeleteItem(db))
+			items.DELETE("/:id", ginitem.DeleteItem(db))
 		}
 	} // Define a simple GET endpoint
 	r.GET("/ping", func(c *gin.Context) {
@@ -57,25 +54,5 @@ func main() {
 	// Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)
 	if err := r.Run(":3001"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
-	}
-}
-
-func DeleteItem(db *gorm.DB) func(*gin.Context) {
-	return func(c *gin.Context) {
-		id, err := strconv.Atoi(c.Param("id"))
-
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		if err := db.Table(model.TodoItem{}.TableName()).Where("id = ?", id).Updates(map[string]interface{}{
-			"status": "Deleted",
-		}).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		c.JSON(http.StatusOK, common.SimpleSuccessResponse(true))
 	}
 }
