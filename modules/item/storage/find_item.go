@@ -5,7 +5,7 @@ import (
 	"social-todo-list/modules/item/model"
 )
 
-func (sql *sqlStorage) GetItem(context context.Context, condition map[string]interface{}) (*model.TodoItem, error) {
+func (sql *SqlStorage) GetItem(context context.Context, condition map[string]interface{}) (*model.TodoItem, error) {
 	var data model.TodoItem
 
 	if err := sql.db.Where(condition).First(&data).Error; err != nil {

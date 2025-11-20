@@ -4,12 +4,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type sqlStorage struct {
+type SqlStorage struct {
 	db *gorm.DB
 }
 
-func NewSQLStorage(db *gorm.DB) *sqlStorage {
-	return &sqlStorage{
+func NewSQLStorage(db *gorm.DB) *SqlStorage {
+	return &SqlStorage{
 		db: db,
 	}
 }

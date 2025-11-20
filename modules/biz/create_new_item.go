@@ -10,15 +10,15 @@ type CreateItemStorage interface {
 	CreateItem(context context.Context, data *model.TodoItemCreation) error
 }
 
-type createItemBiz struct {
+type CreateItemBiz struct {
 	storage CreateItemStorage
 }
 
-func NewCreateItemBiz(storage CreateItemStorage) *createItemBiz {
-	return &createItemBiz{storage: storage}
+func NewCreateItemBiz(storage CreateItemStorage) *CreateItemBiz {
+	return &CreateItemBiz{storage: storage}
 }
 
-func (biz *createItemBiz) CreateNewItem(ctx context.Context, data *model.TodoItemCreation) error {
+func (biz *CreateItemBiz) CreateNewItem(ctx context.Context, data *model.TodoItemCreation) error {
 	title := strings.TrimSpace(data.Title)
 
 	if title == "" {

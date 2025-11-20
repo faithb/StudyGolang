@@ -9,15 +9,15 @@ type GetItemStorage interface {
 	GetItem(context context.Context, condition map[string]interface{}) (*model.TodoItem, error)
 }
 
-type getItemBiz struct {
+type GetItemBiz struct {
 	storage GetItemStorage
 }
 
-func NewGetItemBiz(storage GetItemStorage) *getItemBiz {
-	return &getItemBiz{storage: storage}
+func NewGetItemBiz(storage GetItemStorage) *GetItemBiz {
+	return &GetItemBiz{storage: storage}
 }
 
-func (biz *getItemBiz) GetItemById(ctx context.Context, id int) (*model.TodoItem, error) {
+func (biz *GetItemBiz) GetItemById(ctx context.Context, id int) (*model.TodoItem, error) {
 	data, err := biz.storage.GetItem(ctx, map[string]interface{}{"id": id})
 
 	if err != nil {
