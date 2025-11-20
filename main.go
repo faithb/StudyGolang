@@ -39,7 +39,7 @@ func main() {
 		items := v1.Group("/items")
 		{
 			items.POST("", ginitem.CreateItem(db))
-			items.GET("", ListItems(db))
+			items.GET("", ginitem.ListItems(db))
 			items.GET("/:id", ginitem.GetItem(db))
 			items.PUT("/:id", ginitem.UpdateItem(db))
 			items.PATCH("/:id", ginitem.UpdateItem(db))
@@ -77,38 +77,5 @@ func DeleteItem(db *gorm.DB) func(*gin.Context) {
 		}
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(true))
-	}
-}
-
-func ListItems(db *gorm.DB) func(*gin.Context) {
-	return func(c *gin.Context) {
-		var paging common.Paging
-		if err := c.ShouldBindQuery(&paging); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		paging.Process()
-
-		var items []model.TodoItem
-
-		db = db.Where("status != ?", "Deleted")
-
-		if err := db.Table(model.TodoItem{}.
-			TableName()).
-			Count(&paging.Total).
-			Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-
-		if err := db.Order("id desc").
-			Offset((paging.Page - 1) * paging.Limit).
-			Limit(paging.Limit).
-			Find(&items).
-			Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-
-		c.JSON(http.StatusOK, common.NewSuccessResponse(items, paging, nil))
 	}
 }
