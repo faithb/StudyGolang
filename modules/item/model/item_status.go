@@ -56,12 +56,12 @@ func (item *ItemStatus) UnmarshalJSON(data []byte) error {
 func (item *ItemStatus) Scan(value interface{}) error {
 	bytes, ok := value.([]byte)
 	if !ok {
-		return errors.New(fmt.Sprintf("Failed to unmarshal JSONB value:", value))
+		return fmt.Errorf("Failed to unmarshal JSONB value: %v", value)
 	}
 
 	parsed, err := parseItemStatus(string(bytes))
 	if err != nil {
-		return errors.New(fmt.Sprintf("Failed to unmarshal JSONB value:", err))
+		return fmt.Errorf("Failed to unmarshal JSONB value: %v", err)
 	}
 
 	*item = parsed
