@@ -1,21 +1,21 @@
 package common
 
-type successRes struct {
+type SuccessRes struct {
 	Data   interface{} `json:"data"`
 	Paging interface{} `json:"paging,omitempty"`
 	Filter interface{} `json:"filter,omitempty"`
 }
 
-func NewSuccessResponse(data interface{}, paging interface{}, filter interface{}) *successRes {
-	return &successRes{
+func NewSuccessResponse(data interface{}, paging interface{}, filter interface{}) *SuccessRes {
+	return &SuccessRes{
 		Data:   data,
 		Paging: paging,
 		Filter: filter,
 	}
 }
 
-func SimpleSuccessResponse(data interface{}) *successRes {
-	return &successRes{
+func SimpleSuccessResponse(data interface{}) *SuccessRes {
+	return &SuccessRes{
 		Data:   data,
 		Paging: nil,
 		Filter: nil,
